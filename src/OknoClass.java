@@ -24,7 +24,7 @@ public class OknoClass {
         // Ilość hexagonów jest uzależniona od wielkości okna
         windowSize = 800;
         // Wymagamy tablicy NxN, możemy tu ręcznie wstawić wartość
-        xTable = 20;
+        xTable = 40;
 
         yTable = xTable;
         radius = windowSize/(2*xTable);
@@ -43,7 +43,7 @@ public class OknoClass {
                     for (int j = 0; j < yTable; j++) {
 
                         Graphics2D g2 = (Graphics2D) g;
-                        g2.setStroke(new BasicStroke(5));
+                        g2.setStroke(new BasicStroke((float)4.75));
 
                         g2.setColor(Color.BLACK);
                         g2.drawPolygon(hexagonArray[i][j]);
