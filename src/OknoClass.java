@@ -1,8 +1,5 @@
 import javax.swing.*;
-import java.awt.Polygon;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.*;
 
 /**
  * Created by Fengson on 23.11.14.
@@ -35,17 +32,27 @@ public class OknoClass {
         hexagonArray = new Polygon[xTable][yTable];
 
         // Ostatnie dwie współrzędne to środek pierwszego Hexagona - (radius,radius) ustawia go w lewym górnym rogu
-        drawHexagons(xTable, yTable, radius, radius + radius/2, radius + radius/2);
+        createHexagons(xTable, yTable, radius, radius + radius / 2, radius + radius / 2);
 
-        JPanel p = new JPanel() {
+        JPanel gamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor(Color.BLUE);
 
-                for(int i=0; i<xTable; i++)
-                    for(int j=0; j<yTable; j++)
-                        g.drawPolygon(hexagonArray[i][j]);
+                for(int i=0; i<xTable; i++) {
+                    for (int j = 0; j < yTable; j++) {
+
+                        Graphics2D g2 = (Graphics2D) g;
+                        g2.setStroke(new BasicStroke(5));
+
+                        g2.setColor(Color.BLACK);
+                        g2.drawPolygon(hexagonArray[i][j]);
+
+                        g2.setColor(Color.WHITE);
+                        g2.fillPolygon(hexagonArray[i][j]);
+                    }
+                }
+
             }
 
             @Override
@@ -62,14 +69,14 @@ public class OknoClass {
         button1.setPreferredSize(new Dimension(300,300));
 
 
-        mainWindow.add(p);
+        mainWindow.add(gamePanel);
         mainWindow.pack();
         mainWindow.setVisible(true);
     }
 
     // Metoda do rysowania Hexagonów
     // Pobiera ilość kolumn i rzędów, rozmiar, oraz pozycję pierwszego hexagona
-    public void drawHexagons(int hexagonColumns, int hexagonRows, int r, int x, int y){
+    public void createHexagons(int hexagonColumns, int hexagonRows, int r, int x, int y){
 
         int originalX = x;
 
