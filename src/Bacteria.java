@@ -17,7 +17,7 @@ public class Bacteria extends Hex {
     /**
      * @return mass of eaten Bacteria
      */
-    public int getMass() {
+    public int getEaten() {
         return mass;
     }
 

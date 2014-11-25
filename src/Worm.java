@@ -37,10 +37,13 @@
 
 public class Worm extends Hex {
 
-    private int[] gene;
-    private int[] inheritedGene;
+    private final int[] gene;
+    private final int[] inheritedGene;
 
     private HexDirection direction;
+
+    private final double[] probability;
+    private double probabilitiesSum;
 
     private int mass;
 
@@ -52,11 +55,14 @@ public class Worm extends Hex {
      */
     public Worm(int x, int y) {
         super(x, y);
-        this.gene = new int[Utils.getDirectionsNumber()];
-        this.inheritedGene = new int[Utils.getDirectionsNumber()];
+        this.gene = new int[Constants.GENE_COUNT];
+        this.inheritedGene = new int[Constants.GENE_COUNT];
         generateRandomGenes();
         this.direction = Utils.getRandomDirection();
         this.mass = Utils.getRandomMass();
+        this.probability = new double[Constants.GENE_COUNT];
+        this.probabilitiesSum = 0;
+        calculateProbability();
     }
 
     /**
@@ -68,13 +74,16 @@ public class Worm extends Hex {
      */
     public Worm(int x, int y, Worm parent) {
         super(x, y);
-        this.gene = new int[Utils.getDirectionsNumber()];
+        this.gene = new int[Constants.GENE_COUNT];
         this.direction = parent.getDirection();
         this.mass = (int) (0.5 * parent.getMass());
         this.inheritedGene = parent.getGenes();
 
         mutateInAncestorsDirection(parent.getInheritedGenes());
         mutateOneGeneRandomly();
+        this.probability = new double[Constants.GENE_COUNT];
+        this.probabilitiesSum = 0;
+        calculateProbability();
     }
 
     public HexDirection getDirection() {
@@ -94,10 +103,19 @@ public class Worm extends Hex {
             return null;
         }
 
-        /**
-         * calculate probabilities
-         */
-        double[] probability = new double[Utils.getDirectionsNumber()];
+        double rand = Math.random() * probabilitiesSum;
+        double temporaryProbabilitiesSum = 0;
+        for (int i = 0; i < probability.length; i++) {
+            temporaryProbabilitiesSum += probability[i];
+            if (rand < temporaryProbabilitiesSum) {
+                return direction = HexDirection.values()[i];
+            }
+        }
+
+        return direction = HexDirection.values()[Constants.GENE_COUNT - 1];
+    }
+
+    private void calculateProbability(){
         int sum = 0;
         for (int j = 0; j < probability.length; j++) {
             sum += Math.exp(-1 * gene[j]);
@@ -109,25 +127,13 @@ public class Worm extends Hex {
         /**
          * pick index based on probabilities
          */
-        double probabilitiesSum = 0;
         for (double p : probability) {
             probabilitiesSum += p;
         }
-
-        double rand = Math.random() * probabilitiesSum;
-        double temporaryProbabilitiesSum = 0;
-        for (int i = 0; i < probability.length; i++) {
-            temporaryProbabilitiesSum += probability[i];
-            if (rand < temporaryProbabilitiesSum) {
-                return direction = HexDirection.values()[i];
-            }
-        }
-
-        return direction = HexDirection.values()[Utils.getDirectionsNumber() - 1];
     }
 
-    public void eatBacteria(Bacteria bacteria) {
-        mass += bacteria.getMass();
+    public void eatBacteria(int bacteriaMass) {
+        mass += bacteriaMass;
     }
 
     public boolean isOverweight() {
@@ -135,7 +141,7 @@ public class Worm extends Hex {
     }
 
     private void generateRandomGenes() {
-        for (int i = 0; i < Utils.getDirectionsNumber(); i++) {
+        for (int i = 0; i < Constants.GENE_COUNT; i++) {
             gene[i] = Utils.getRandomGeneValue();
             inheritedGene[i] = gene[i];
         }
@@ -152,9 +158,9 @@ public class Worm extends Hex {
     }
 
     private void mutateInAncestorsDirection(int[] grandpaGenes) {
-        int diff = 0;
+        int diff;
 
-        for (int i = 0; i < Utils.getDirectionsNumber(); i++) {
+        for (int i = 0; i < Constants.GENE_COUNT; i++) {
             diff = inheritedGene[i] - grandpaGenes[i];
             gene[i] = inheritedGene[i] + (int) (diff * Utils.getRandomPercent());
             if (gene[i] < 0) {
