@@ -129,6 +129,10 @@ public class Worm extends Hex {
         return direction = HexDirection.values()[getDirectionsNumber() - 1];
     }
 
+    public void eatBacteria(Bacteria bacteria) {
+        mass += bacteria.getMass();
+    }
+
     public boolean isOverweight() {
         return mass > MAX_WEIGHT;
     }
@@ -169,7 +173,7 @@ public class Worm extends Hex {
     }
 
     private int getRandomMass() {
-        return (int) (Math.random() * MAX_WEIGHT);
+        return 1 + (int) (Math.random() * MAX_WEIGHT);
     }
 
     private int[] getGenes() {
