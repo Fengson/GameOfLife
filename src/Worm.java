@@ -37,53 +37,57 @@
 
 public class Worm extends Hex {
 
-    private int[] Gene;
+    private int[] gene;
     private int[] inheritedGene;
+    private final int MAX_GENE_VALUE = 50;
+
     private HexDirection direction;
+
     private int mass;
     private final int WEIGHT_LOSS_PER_ROUND = 1;
 
+    /**
+     * worm born out of ashes!
+     *
+     * @param x
+     * @param y
+     * @param mass
+     */
     public Worm(int x, int y, int mass) {
         super(x, y);
-        this.Gene = new int[getDirectionsNumber()];
+        this.gene = new int[getDirectionsNumber()];
         this.inheritedGene = new int[getDirectionsNumber()];
-        for(int i=0; i<getDirectionsNumber(); i++) {
-            Gene[i] = getRandomGeneValue();
-            inheritedGene[i] = Gene[i];
-        }
+        generateRandomGenes();
         this.direction = getRandomDirection();
         this.mass = mass;
     }
 
+    /**
+     * hydra born worm
+     *
+     * @param x
+     * @param y
+     * @param parent
+     */
     public Worm(int x, int y, Worm parent) {
         super(x, y);
+        this.gene = new int[getDirectionsNumber()];
         this.direction = parent.getDirection();
-        this.mass = (int)(0.5*parent.getMass());
+        this.mass = (int) (0.5 * parent.getMass());
         this.inheritedGene = parent.getGenes();
 
-        this.Gene = new int[getDirectionsNumber()];
-        int[] grandpaGenes = parent.getInheritedGenes();
-        int diff = 0;
-
-        for(int i=0; i<getDirectionsNumber(); i++) {
-            diff = inheritedGene[i] - grandpaGenes[i];
-            Gene[i] = inheritedGene[i] + (int)(diff*getRandomPercent());
-            if(Gene[i]<0)
-                Gene[i] = 0;
-            else if(Gene[i]>50)
-                Gene[i] = 50;
-        }
-        mutate();
+        mutateInAncestorsDirection(parent.getInheritedGenes());
+        mutateOneGeneRandomly();
     }
 
     /**
      * @return null when worm is dead, otherwise new direction
      */
     public HexDirection getWormsNewDirectionAndLooseWeight() {
+
         /**
          * decrement mass
          */
-
         mass -= WEIGHT_LOSS_PER_ROUND;
         if (mass <= 0) {
             return null;
@@ -95,24 +99,25 @@ public class Worm extends Hex {
         double[] probability = new double[getDirectionsNumber()];
         int sum = 0;
         for (int j = 0; j < probability.length; j++) {
-            sum += Math.exp(-1 * Gene[j]);
+            sum += Math.exp(-1 * gene[j]);
         }
         for (int i = 0; i < probability.length; i++) {
-            probability[i] = Math.exp(-1 * Gene[i]) / sum;
+            probability[i] = Math.exp(-1 * gene[i]) / sum;
         }
 
         /**
          * pick index based on probabilities
          */
         double probabilitiesSum = 0;
-        double tmp = 0;
-        for (int i = 0; i < probability.length; i++)
-            probabilitiesSum += probability[i];
-        double rand = Math.random() * probabilitiesSum;
+        for (double p : probability) {
+            probabilitiesSum += p;
+        }
 
+        double rand = Math.random() * probabilitiesSum;
+        double temporaryProbabilitiesSum = 0;
         for (int i = 0; i < probability.length; i++) {
-            tmp += probability[i];
-            if (rand < tmp) {
+            temporaryProbabilitiesSum += probability[i];
+            if (rand < temporaryProbabilitiesSum) {
                 return direction = HexDirection.values()[i];
             }
         }
@@ -120,14 +125,35 @@ public class Worm extends Hex {
         return direction = HexDirection.values()[getDirectionsNumber() - 1];
     }
 
+    private void generateRandomGenes() {
+        for (int i = 0; i < getDirectionsNumber(); i++) {
+            gene[i] = getRandomGeneValue();
+            inheritedGene[i] = gene[i];
+        }
+    }
 
-    public void mutate() {
+    private void mutateOneGeneRandomly() {
         int i = getRandomDirectionIndex();
-        Gene[i] += getRandomGeneMod();
-        if(Gene[i]<0)
-            Gene[i] = 0;
-        else if(Gene[i]>50)
-            Gene[i] = 50;
+        gene[i] += getRandomGeneMod();
+        if (gene[i] < 0) {
+            gene[i] = 0;
+        } else if (gene[i] > MAX_GENE_VALUE) {
+            gene[i] = MAX_GENE_VALUE;
+        }
+    }
+
+    private void mutateInAncestorsDirection(int[] grandpaGenes) {
+        int diff = 0;
+
+        for (int i = 0; i < getDirectionsNumber(); i++) {
+            diff = inheritedGene[i] - grandpaGenes[i];
+            gene[i] = inheritedGene[i] + (int) (diff * getRandomPercent());
+            if (gene[i] < 0) {
+                gene[i] = 0;
+            } else if (gene[i] > MAX_GENE_VALUE) {
+                gene[i] = MAX_GENE_VALUE;
+            }
+        }
     }
 
     public int getMass() {
@@ -143,7 +169,7 @@ public class Worm extends Hex {
     }
 
     public int[] getGenes() {
-        return Gene;
+        return gene;
     }
 
     public int[] getInheritedGenes() {
@@ -155,7 +181,7 @@ public class Worm extends Hex {
     }
 
     private int getRandomGeneValue() {
-        return (int) (Math.random() * 51);
+        return (int) (Math.random() * (MAX_GENE_VALUE + 1));
     }
 
     private int getRandomGeneMod() {
@@ -163,7 +189,7 @@ public class Worm extends Hex {
     }
 
     private float getRandomPercent() {
-        return ( (int)(-100 + Math.random() * 301) )/100;
+        return ((int) (-100 + Math.random() * 301)) / 100;
     }
 
     private int getRandomDirectionIndex() {
