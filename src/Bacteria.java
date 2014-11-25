@@ -8,7 +8,6 @@
  */
 public class Bacteria extends Hex {
     private final int mass;
-    private final int MAX_WEIGHT = 5;
 
     public Bacteria(int x, int y) {
         super(x, y);
@@ -23,7 +22,7 @@ public class Bacteria extends Hex {
     }
 
     private int getRandomMass() {
-        return 1 + (int) (Math.random() * MAX_WEIGHT);
+        return 1 + (int) (Math.random() * Constants.MAX_BACTERIA_WEIGHT);
     }
 
 }
