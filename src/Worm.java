@@ -45,21 +45,21 @@ public class Worm extends Hex {
 
     private int mass;
     private final int WEIGHT_LOSS_PER_ROUND = 1;
+    private final int MAX_WEIGHT = 10;
 
     /**
      * worm born out of ashes!
      *
      * @param x
      * @param y
-     * @param mass
      */
-    public Worm(int x, int y, int mass) {
+    public Worm(int x, int y) {
         super(x, y);
         this.gene = new int[getDirectionsNumber()];
         this.inheritedGene = new int[getDirectionsNumber()];
         generateRandomGenes();
         this.direction = getRandomDirection();
-        this.mass = mass;
+        this.mass = getRandomMass();
     }
 
     /**
@@ -78,6 +78,10 @@ public class Worm extends Hex {
 
         mutateInAncestorsDirection(parent.getInheritedGenes());
         mutateOneGeneRandomly();
+    }
+
+    public HexDirection getDirection() {
+        return direction;
     }
 
     /**
@@ -125,6 +129,10 @@ public class Worm extends Hex {
         return direction = HexDirection.values()[getDirectionsNumber() - 1];
     }
 
+    public boolean isOverweight() {
+        return mass > MAX_WEIGHT;
+    }
+
     private void generateRandomGenes() {
         for (int i = 0; i < getDirectionsNumber(); i++) {
             gene[i] = getRandomGeneValue();
@@ -156,28 +164,20 @@ public class Worm extends Hex {
         }
     }
 
-    public int getMass() {
+    private int getMass() {
         return mass;
     }
 
-    public void setMass(int mass) {
-        this.mass = mass;
+    private int getRandomMass() {
+        return (int) (Math.random() * MAX_WEIGHT);
     }
 
-    public HexDirection getDirection() {
-        return direction;
-    }
-
-    public int[] getGenes() {
+    private int[] getGenes() {
         return gene;
     }
 
-    public int[] getInheritedGenes() {
+    private int[] getInheritedGenes() {
         return inheritedGene;
-    }
-
-    private HexDirection getRandomDirection() {
-        return HexDirection.values()[getRandomDirectionIndex()];
     }
 
     private int getRandomGeneValue() {
@@ -190,6 +190,10 @@ public class Worm extends Hex {
 
     private float getRandomPercent() {
         return ((int) (-100 + Math.random() * 301)) / 100;
+    }
+
+    private HexDirection getRandomDirection() {
+        return HexDirection.values()[getRandomDirectionIndex()];
     }
 
     private int getRandomDirectionIndex() {
