@@ -45,6 +45,37 @@ public class WormUtils {
         return probabilitiesSum;
     }
 
+    public static void generateRandomGenes(int[] gene, int[] inheritedGene) {
+        for (int i = 0; i < Constants.GENE_COUNT; i++) {
+            gene[i] = WormUtils.getRandomGeneValue();
+            inheritedGene[i] = gene[i];
+        }
+    }
+
+    public static void mutateOneGeneRandomly(int[] gene) {
+        int i = WormUtils.getRandomDirectionIndex();
+        gene[i] += WormUtils.getRandomGeneModifier();
+        if (gene[i] < 0) {
+            gene[i] = 0;
+        } else if (gene[i] > Constants.MAX_GENE_VALUE) {
+            gene[i] = Constants.MAX_GENE_VALUE;
+        }
+    }
+
+    public static void mutateInAncestorsDirection(int[] gene, int[] inheritedGene, int[] grandpaGenes) {
+        int diff;
+
+        for (int i = 0; i < Constants.GENE_COUNT; i++) {
+            diff = inheritedGene[i] - grandpaGenes[i];
+            gene[i] = inheritedGene[i] + (int) (diff * WormUtils.getRandomPercent());
+            if (gene[i] < 0) {
+                gene[i] = 0;
+            } else if (gene[i] > Constants.MAX_GENE_VALUE) {
+                gene[i] = Constants.MAX_GENE_VALUE;
+            }
+        }
+    }
+
     public static int getRandomMass() {
         return 1 + (int) (Math.random() * Constants.MAX_WORM_WEIGHT);
     }

@@ -60,7 +60,7 @@ public class Worm extends Hex {
         this.gene = new int[Constants.GENE_COUNT];
         this.inheritedGene = new int[Constants.GENE_COUNT];
 
-        generateRandomGenes();
+        WormUtils.generateRandomGenes(gene,inheritedGene);
         this.probability = WormUtils.calculateProbability(gene);
         this.probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
     }
@@ -79,8 +79,8 @@ public class Worm extends Hex {
         this.gene = new int[Constants.GENE_COUNT];
         this.inheritedGene = parent.getGenes();
 
-        mutateInAncestorsDirection(parent.getInheritedGenes());
-        mutateOneGeneRandomly();
+        WormUtils.mutateInAncestorsDirection(gene,inheritedGene,parent.getInheritedGenes());
+        WormUtils.mutateOneGeneRandomly(gene);
         probability = WormUtils.calculateProbability(gene);
         probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
     }
@@ -102,37 +102,6 @@ public class Worm extends Hex {
 
     public boolean isOverweight() {
         return mass > Constants.MAX_WORM_WEIGHT;
-    }
-
-    private void generateRandomGenes() {
-        for (int i = 0; i < Constants.GENE_COUNT; i++) {
-            gene[i] = WormUtils.getRandomGeneValue();
-            inheritedGene[i] = gene[i];
-        }
-    }
-
-    private void mutateOneGeneRandomly() {
-        int i = WormUtils.getRandomDirectionIndex();
-        gene[i] += WormUtils.getRandomGeneModifier();
-        if (gene[i] < 0) {
-            gene[i] = 0;
-        } else if (gene[i] > Constants.MAX_GENE_VALUE) {
-            gene[i] = Constants.MAX_GENE_VALUE;
-        }
-    }
-
-    private void mutateInAncestorsDirection(int[] grandpaGenes) {
-        int diff;
-
-        for (int i = 0; i < Constants.GENE_COUNT; i++) {
-            diff = inheritedGene[i] - grandpaGenes[i];
-            gene[i] = inheritedGene[i] + (int) (diff * WormUtils.getRandomPercent());
-            if (gene[i] < 0) {
-                gene[i] = 0;
-            } else if (gene[i] > Constants.MAX_GENE_VALUE) {
-                gene[i] = Constants.MAX_GENE_VALUE;
-            }
-        }
     }
 
     public HexDirection getDirection() {
