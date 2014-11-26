@@ -24,7 +24,7 @@ public class WormUtils {
     }
 
     public static double[] calculateProbability(int[] gene){
-        int sum = 0;
+        double sum = 0;
         double[] probabilities = new double[Constants.GENE_COUNT];
         for (int j = 0; j < probabilities.length; j++) {
             sum += Math.exp(-1 * gene[j]);
