@@ -11,8 +11,9 @@
 
 public class WormUtils {
 
-    public static HexDirection getDirectionByProbabilities(double rand, double[] probability) {
+    public static HexDirection getDirectionByProbabilities(double probabilitiesSum, double[] probability) {
         double temporaryProbabilitiesSum = 0;
+        double rand = Math.random() * probabilitiesSum;
         for (int i = 0; i < probability.length; i++) {
             temporaryProbabilitiesSum += probability[i];
             if (rand < temporaryProbabilitiesSum) {
@@ -36,7 +37,7 @@ public class WormUtils {
         return probabilities;
     }
 
-    public static double getProbabilitiesSum(double[] probabilities) {
+    public static double calculateProbabilitiesSum(double[] probabilities) {
         double probabilitiesSum = 0;
         for (double p : probabilities) {
             probabilitiesSum += p;

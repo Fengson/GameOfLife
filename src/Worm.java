@@ -62,7 +62,7 @@ public class Worm extends Hex {
 
         generateRandomGenes();
         this.probability = WormUtils.calculateProbability(gene);
-        this.probabilitiesSum = WormUtils.getProbabilitiesSum(probability);
+        this.probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Worm extends Hex {
         mutateInAncestorsDirection(parent.getInheritedGenes());
         mutateOneGeneRandomly();
         probability = WormUtils.calculateProbability(gene);
-        probabilitiesSum = WormUtils.getProbabilitiesSum(probability);
+        probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
     }
 
     /**
@@ -93,8 +93,7 @@ public class Worm extends Hex {
         if (mass <= 0) {
             return null;
         }
-        double rand = Math.random() * probabilitiesSum;
-        return direction = WormUtils.getDirectionByProbabilities(rand, probability);
+        return direction = WormUtils.getDirectionByProbabilities(probabilitiesSum, probability);
     }
 
     public void eatBacteria(int bacteriaMass) {
@@ -139,7 +138,6 @@ public class Worm extends Hex {
     public HexDirection getDirection() {
         return direction;
     }
-
 
     private int getMass() {
         return mass;
