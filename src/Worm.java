@@ -55,11 +55,12 @@ public class Worm extends Hex {
      */
     public Worm(int x, int y) {
         super(x, y);
-        this.gene = new int[Constants.GENE_COUNT];
-        this.inheritedGene = new int[Constants.GENE_COUNT];
-        generateRandomGenes();
         this.direction = WormUtils.getRandomDirection();
         this.mass = WormUtils.getRandomMass();
+        this.gene = new int[Constants.GENE_COUNT];
+        this.inheritedGene = new int[Constants.GENE_COUNT];
+
+        generateRandomGenes();
         this.probability = WormUtils.calculateProbability(gene);
         this.probabilitiesSum = WormUtils.getProbabilitiesSum(probability);
     }
