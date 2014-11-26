@@ -58,11 +58,10 @@ public class Worm extends Hex {
         this.gene = new int[Constants.GENE_COUNT];
         this.inheritedGene = new int[Constants.GENE_COUNT];
         generateRandomGenes();
-        this.direction = Utils.getRandomDirection();
-        this.mass = Utils.getRandomMass();
-        this.probability = new double[Constants.GENE_COUNT];
-        this.probabilitiesSum = 0;
-        calculateProbability();
+        this.direction = WormUtils.getRandomDirection();
+        this.mass = WormUtils.getRandomMass();
+        this.probability = WormUtils.calculateProbability(gene);
+        this.probabilitiesSum = WormUtils.getProbabilitiesSum(probability);
     }
 
     /**
@@ -74,62 +73,27 @@ public class Worm extends Hex {
      */
     public Worm(int x, int y, Worm parent) {
         super(x, y);
-        this.gene = new int[Constants.GENE_COUNT];
         this.direction = parent.getDirection();
         this.mass = (int) (0.5 * parent.getMass());
+        this.gene = new int[Constants.GENE_COUNT];
         this.inheritedGene = parent.getGenes();
 
         mutateInAncestorsDirection(parent.getInheritedGenes());
         mutateOneGeneRandomly();
-        this.probability = new double[Constants.GENE_COUNT];
-        this.probabilitiesSum = 0;
-        calculateProbability();
-    }
-
-    public HexDirection getDirection() {
-        return direction;
+        probability = WormUtils.calculateProbability(gene);
+        probabilitiesSum = WormUtils.getProbabilitiesSum(probability);
     }
 
     /**
      * @return null when worm is dead, otherwise new direction
      */
     public HexDirection getWormsNewDirectionAndLooseWeight() {
-
-        /**
-         * decrement mass
-         */
         mass -= Constants.WEIGHT_LOSS_PER_ROUND;
         if (mass <= 0) {
             return null;
         }
-
         double rand = Math.random() * probabilitiesSum;
-        double temporaryProbabilitiesSum = 0;
-        for (int i = 0; i < probability.length; i++) {
-            temporaryProbabilitiesSum += probability[i];
-            if (rand < temporaryProbabilitiesSum) {
-                return direction = HexDirection.values()[i];
-            }
-        }
-
-        return direction = HexDirection.values()[Constants.GENE_COUNT - 1];
-    }
-
-    private void calculateProbability(){
-        int sum = 0;
-        for (int j = 0; j < probability.length; j++) {
-            sum += Math.exp(-1 * gene[j]);
-        }
-        for (int i = 0; i < probability.length; i++) {
-            probability[i] = Math.exp(-1 * gene[i]) / sum;
-        }
-
-        /**
-         * pick index based on probabilities
-         */
-        for (double p : probability) {
-            probabilitiesSum += p;
-        }
+        return direction = WormUtils.getDirectionByProbabilities(rand, probability);
     }
 
     public void eatBacteria(int bacteriaMass) {
@@ -142,14 +106,14 @@ public class Worm extends Hex {
 
     private void generateRandomGenes() {
         for (int i = 0; i < Constants.GENE_COUNT; i++) {
-            gene[i] = Utils.getRandomGeneValue();
+            gene[i] = WormUtils.getRandomGeneValue();
             inheritedGene[i] = gene[i];
         }
     }
 
     private void mutateOneGeneRandomly() {
-        int i = Utils.getRandomDirectionIndex();
-        gene[i] += Utils.getRandomGeneMod();
+        int i = WormUtils.getRandomDirectionIndex();
+        gene[i] += WormUtils.getRandomGeneModifier();
         if (gene[i] < 0) {
             gene[i] = 0;
         } else if (gene[i] > Constants.MAX_GENE_VALUE) {
@@ -162,7 +126,7 @@ public class Worm extends Hex {
 
         for (int i = 0; i < Constants.GENE_COUNT; i++) {
             diff = inheritedGene[i] - grandpaGenes[i];
-            gene[i] = inheritedGene[i] + (int) (diff * Utils.getRandomPercent());
+            gene[i] = inheritedGene[i] + (int) (diff * WormUtils.getRandomPercent());
             if (gene[i] < 0) {
                 gene[i] = 0;
             } else if (gene[i] > Constants.MAX_GENE_VALUE) {
@@ -170,6 +134,11 @@ public class Worm extends Hex {
             }
         }
     }
+
+    public HexDirection getDirection() {
+        return direction;
+    }
+
 
     private int getMass() {
         return mass;
