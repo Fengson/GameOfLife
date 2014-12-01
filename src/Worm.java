@@ -88,12 +88,16 @@ public class Worm extends Hex {
     /**
      * @return null when worm is dead, otherwise new direction
      */
-    public HexDirection getWormsNewDirectionAndLooseWeight() {
+    public HexDirection getWormsNewDirection() {
+        return direction = WormUtils.getDirectionByProbabilities(probabilitiesSum, probability);
+    }
+
+    public boolean LooseWeight() {
         mass -= Constants.WEIGHT_LOSS_PER_ROUND;
         if (mass <= 0) {
-            return null;
+            return false;
         }
-        return direction = WormUtils.getDirectionByProbabilities(probabilitiesSum, probability);
+        return true;
     }
 
     public void eatBacteria(int bacteriaMass) {

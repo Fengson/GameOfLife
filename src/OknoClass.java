@@ -10,27 +10,24 @@ public class OknoClass {
     private JFrame mainWindow;
     private Polygon[][] hexagonArray;
     private Polygon singleHexagon;
-    private int xTable, yTable, radius, windowSize;
+    private final int xTable  = 40;
+    private final int yTable  = 40;
+    private final int windowSize = 800;
+    private final int radius = windowSize/(2*xTable);
     private int gameArray[][];
 
     public OknoClass() {
         initComponents();
-        gameArray = new int[40][40];
+        gameArray = new int[xTable][yTable];
     }
+
+    public int getX(){ return xTable;}
 
     private void initComponents() {
 
         mainWindow = new JFrame("Game of Life");
         mainWindow.setResizable(false);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Ilość hexagonów jest uzależniona od wielkości okna
-        windowSize = 800;
-        // Wymagamy tablicy NxN, możemy tu ręcznie wstawić wartość
-        xTable = 40;
-
-        yTable = xTable;
-        radius = windowSize/(2*xTable);
 
         hexagonArray = new Polygon[xTable][yTable];
 
@@ -128,17 +125,17 @@ public class OknoClass {
 
     public static void main(String[] args) {
 
-        int xTable = 40;
+        int xTable;
         int fieldKind;
 
         OknoClass gameWindow = new OknoClass();
+        xTable = gameWindow.getX();
 
         //Code under should be launched by button?
         Game thisGame = new Game(xTable); // Calling constructor & adding some worms
         boolean isRunning = true;
         while (isRunning){
             thisGame.MakeStep();      // Updating Level state
-            thisGame.getLevel();
 
             for(int i=0; i<xTable; i++){
                 for(int j=0; j<xTable; j++){
