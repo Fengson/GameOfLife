@@ -13,8 +13,8 @@ public class Constants {
 
     public static final int MAX_GENE_VALUE = 50;
     public static final int WEIGHT_LOSS_PER_ROUND = 1;
-    public static final int MAX_WORM_WEIGHT = 10;
-    public static final int MAX_BACTERIA_WEIGHT = 5;
+    public static final int MAX_WORM_WEIGHT = 50;
+    public static final int MAX_BACTERIA_WEIGHT = 100;
     public static final int GENE_COUNT = HexDirection.values().length;
 
 }
