@@ -23,8 +23,8 @@ public class Game {
         Random r = new Random();
         int x, y;
         for (int i = 0; i < 8; i++) {
-            x = r.nextInt(40);
-            y = r.nextInt(40);
+            x = r.nextInt(levelSize);
+            y = r.nextInt(levelSize);
             if (Level[x][y] == null) {
                 Level[x][y] = new Worm(x, y);
             }
@@ -86,8 +86,8 @@ public class Game {
 
         for (int i = 0; i < 2; i++) {
             Random r = new Random();
-            int x = r.nextInt(40);
-            int y = r.nextInt(40);
+            int x = r.nextInt(levelSize);
+            int y = r.nextInt(levelSize);
             if (Level[x][y] == null) {
                 Level[x][y] = new Bacteria(x, y);
             }
@@ -158,6 +158,22 @@ public class Game {
         }
 
         return y;
+    }
+
+    public int getFieldKind(int x, int y) {
+
+        // 0 - Empty
+        // 1 - Worm
+        // 2 - Bactery
+
+        if (this.Level[x][y] == null)
+            return 0;
+        if (this.Level[x][y].is(Worm.class))
+            return 1;
+        if (this.Level[x][y].is(Bacteria.class))
+            return 2;
+
+        return 0;
     }
 }
 

@@ -6,13 +6,16 @@ import java.awt.*;
  */
 public class OknoClass {
 
+    private JPanel gamePanel;
     private JFrame mainWindow;
     private Polygon[][] hexagonArray;
     private Polygon singleHexagon;
     private int xTable, yTable, radius, windowSize;
+    private int gameArray[][];
 
     public OknoClass() {
         initComponents();
+        gameArray = new int[40][40];
     }
 
     private void initComponents() {
@@ -34,7 +37,7 @@ public class OknoClass {
         // Ostatnie dwie współrzędne to środek pierwszego Hexagona - (radius,radius) ustawia go w lewym górnym rogu
         createHexagons(xTable, yTable, radius, radius + radius / 2, radius + radius / 2);
 
-        JPanel gamePanel = new JPanel() {
+        gamePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -48,8 +51,23 @@ public class OknoClass {
                         g2.setColor(Color.BLACK);
                         g2.drawPolygon(hexagonArray[i][j]);
 
-                        g2.setColor(Color.WHITE);
-                        g2.fillPolygon(hexagonArray[i][j]);
+                        // Empty Field
+                        if(gameArray[i][j] == 0) {
+                            g2.setColor(Color.WHITE);
+                            g2.fillPolygon(hexagonArray[i][j]);
+                        }
+
+                        // Worm Field
+                        if(gameArray[i][j] == 1) {
+                            g2.setColor(Color.GREEN);
+                            g2.fillPolygon(hexagonArray[i][j]);
+                        }
+
+                        // Bactery Field
+                        if(gameArray[i][j] == 2) {
+                            g2.setColor(Color.RED);
+                            g2.fillPolygon(hexagonArray[i][j]);
+                        }
                     }
                 }
 
@@ -61,12 +79,17 @@ public class OknoClass {
             }
         };
 
-        JButton button1 = new JButton("Start");
-        button1.setBounds(10, windowSize - 35, 100, 25);
+        JButton startButton = new JButton("Start");
+        startButton.setBounds(10, windowSize - 35, 100, 25);
 
-        mainWindow.add(button1);
+        JButton stopButton = new JButton("Stop");
+        stopButton.setBounds(110, windowSize - 35, 100, 25);
 
-        button1.setPreferredSize(new Dimension(300,300));
+        mainWindow.add(startButton);
+        mainWindow.add(stopButton);
+
+        startButton.setPreferredSize(new Dimension(300,300));
+        stopButton.setPreferredSize(new Dimension(300,300));
 
 
         mainWindow.add(gamePanel);
@@ -104,20 +127,36 @@ public class OknoClass {
     }
 
     public static void main(String[] args) {
-        new OknoClass();
 
+        int xTable = 40;
+        int fieldKind;
+
+        OknoClass gameWindow = new OknoClass();
 
         //Code under should be launched by button?
-        Game thisGame = new Game(40); // Calling constructor & adding some worms
+        Game thisGame = new Game(xTable); // Calling constructor & adding some worms
         boolean isRunning = true;
         while (isRunning){
             thisGame.MakeStep();      // Updating Level state
-            // thisGame.getLevel();
+            thisGame.getLevel();
 
+            for(int i=0; i<xTable; i++){
+                for(int j=0; j<xTable; j++){
+                    fieldKind = thisGame.getFieldKind(i,j);
+                    gameWindow.gameArray[i][j] = fieldKind;
+                }
+            }
+
+            gameWindow.gamePanel.repaint();
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            //isRunning = false;
         }
-
-
-
-
     }
+
 }
