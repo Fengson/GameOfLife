@@ -16,5 +16,8 @@ public class Constants {
     public static final int MAX_WORM_WEIGHT = 50;
     public static final int MAX_BACTERIA_WEIGHT = 100;
     public static final int GENE_COUNT = HexDirection.values().length;
+    public static final int initialWormsNumber = 100;
+    public static final int initialBacteryNumber = 100;
+    public static final int BacteryGrow = 40;
 
 }

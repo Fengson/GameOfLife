@@ -9,9 +9,6 @@ public class Game {
 
     private int levelSize;
     private Hex[][] Level;
-    private final int initialWormsNumber = 100;
-    private final int initialBacteryNumber = 10;
-    private final int BacteryGrow = 10;
     private Random r;
 
 
@@ -23,7 +20,7 @@ public class Game {
 
         r.setSeed(System.currentTimeMillis());
 
-        for (int i = 0; i < initialWormsNumber; i++) {
+        for (int i = 0; i < Constants.initialWormsNumber; i++) {
 
             y = r.nextInt(levelSize);
             x = r.nextInt(levelSize);
@@ -35,7 +32,7 @@ public class Game {
 
         r.setSeed(System.currentTimeMillis());
 
-        for (int i = 0; i < initialBacteryNumber; i++) {
+        for (int i = 0; i < Constants.initialBacteryNumber; i++) {
 
             x = r.nextInt(levelSize);
             y = r.nextInt(levelSize);
@@ -60,6 +57,7 @@ public class Game {
                     int newY = TranslateDirY(j, dir);
 
                     if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
+                        if (Level[newX][newY] == null || Level[newX][newY].is(Bacteria.class)){
                         if (Level[newX][newY] != null && Level[newX][newY].is(Bacteria.class)) {
                             Bacteria thisBact = (Bacteria) Level[newX][newY];
                             thisWorm.eatBacteria(thisBact.getEaten());
@@ -71,16 +69,18 @@ public class Game {
                             Level[newX][newY] = null;
                         }
                         Level[i][j] = null;
-                    } else if (!thisWorm.looseWeight()) {
+                    }} else if (!thisWorm.looseWeight()) {
                         Level[i][j] = null;
                     }
 
                     if (thisWorm.isOverweight()) {
-                        dir = WormUtils.getRandomDirection();
-
-                        newX = TranslateDirX(i, dir);
-                        newY = TranslateDirY(j, dir);
-
+                        for(int k=0;k<6;k++) {
+                            dir = WormUtils.getRandomDirection();
+                            newX = TranslateDirX(i, dir);
+                            newY = TranslateDirY(j, dir);
+                            if(newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null)
+                                break;
+                        }
                         if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null) {
                             Worm newborn = new Worm(newX, newY, thisWorm);
                             newborn.setActivated(false);
@@ -95,7 +95,7 @@ public class Game {
             }
         }
 
-        for (int i = 0; i < BacteryGrow; i++) {
+        for (int i = 0; i < Constants.BacteryGrow; i++) {
             r.setSeed(System.currentTimeMillis());
             int x = r.nextInt(levelSize);
             int y = r.nextInt(levelSize);
