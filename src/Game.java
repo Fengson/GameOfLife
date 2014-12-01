@@ -60,6 +60,8 @@ public class Game {
 
                 if (Level[i][j] != null && Level[i][j].is(Worm.class)) {
                     Worm thisWorm = (Worm) Level[i][j];
+                    if(thisWorm.isActive == false)
+                        continue;
                     HexDirection dir = thisWorm.getWormsNewDirection();
                     int newX = TranslateDirX(i, dir);
                     int newY = TranslateDirY(j, dir);
@@ -86,10 +88,15 @@ public class Game {
 
                         if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
                             // if (Level[newX][newY] == null)
-                            Level[newX][newY] = new Worm(newX, newY, thisWorm);
+                            Worm newborn = new Worm(newX, newY, thisWorm);
+                            newborn.activateProtocol(false);
+                            Level[newX][newY] = newborn;
                         }
-                        Level[i][j] = new Worm(i, j, thisWorm);
+                        Worm newborn = new Worm(i, j, thisWorm);
+                        newborn.activateProtocol(false);
+                        Level[i][j] = newborn;
                     }
+                    thisWorm.activateProtocol(false);
                 }
             }
         }
@@ -100,6 +107,15 @@ public class Game {
             int y = r.nextInt(levelSize);
             if (Level[x][y] == null) {
                 Level[x][y] = new Bacteria(x, y);
+            }
+        }
+
+        for (int i = 0; i < levelSize; i++) {
+            for (int j = 0; j < levelSize; j++) {
+                if (Level[i][j] != null && Level[i][j].is(Worm.class)) {
+                    Worm thisWorm = (Worm) Level[i][j];
+                    thisWorm.activateProtocol(true);
+                }
             }
         }
     }
