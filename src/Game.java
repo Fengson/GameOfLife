@@ -50,7 +50,7 @@ public class Game {
                             newX = TranslateDirX(i, dir);
                             newY = TranslateDirY(i, dir);
 
-                            if (newX >= 0 && newX <= levelSize && newY >= 0 && newY <= levelSize) {
+                            if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
                                 if (Level[newX][newY] == null)
                                     Level[newX][newY] = new Worm(newX, newY, thisWorm);
                             }
@@ -58,11 +58,13 @@ public class Game {
                         } else {
 
                             HexDirection dir = thisWorm.getWormsNewDirectionAndLooseWeight();
+
                             int newX, newY;
+
                             newX = TranslateDirX(i, dir);
                             newY = TranslateDirY(i, dir);
 
-                            if (newX >= 0 && newX <= levelSize && newY >= 0 && newY <= levelSize) {
+                            if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
                                 if (Level[newX][newY] == null) {
                                     Level[newX][newY] = Level[i][j];
                                     Level[i][j] = null;
@@ -101,6 +103,7 @@ public class Game {
     }
 
     private int TranslateDirX(int x, HexDirection d) {
+        if(d == null) return x;
         if (x % 2 == 1) {
 
             switch (d) {
@@ -138,6 +141,7 @@ public class Game {
     }
 
     private int TranslateDirY(int y, HexDirection d) {
+        if(d == null) return y;
         switch (d) {
             case LEFT:
                 return y;
