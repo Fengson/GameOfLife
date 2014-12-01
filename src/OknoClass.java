@@ -105,5 +105,19 @@ public class OknoClass {
 
     public static void main(String[] args) {
         new OknoClass();
+
+
+        //Code under should be launched by button?
+        Game thisGame = new Game(40); // Calling constructor & adding some worms
+        boolean isRunning = true;
+        while (isRunning){
+            thisGame.MakeStep();      // Updating Level state
+            // thisGame.getLevel();
+
+        }
+
+
+
+
     }
 }

@@ -44,4 +44,6 @@ public class Hex {
     public boolean is(Class c) {
         return c.isInstance(this);
     }
+
+
 }
