@@ -5,7 +5,6 @@
  */
 
 /**
- *
  * @author Grzegorz Poręba
  */
 
@@ -24,7 +23,7 @@ public class WormUtils {
         return HexDirection.values()[Constants.GENE_COUNT - 1];
     }
 
-    public static double[] calculateProbability(int[] gene){
+    public static double[] calculateProbability(int[] gene) {
         double sum = 0;
         double[] probabilities = new double[Constants.GENE_COUNT];
         for (int j = 0; j < probabilities.length; j++) {
@@ -77,7 +76,7 @@ public class WormUtils {
     }
 
     public static int getRandomMass() {
-        return 1 + (int) (Math.random() * Constants.MAX_WORM_WEIGHT);
+        return Constants.MIN_WORM_WEIGHT + (int) (Math.random() * (Constants.MAX_WORM_WEIGHT - Constants.MIN_WORM_WEIGHT));
     }
 
     public static int getRandomGeneValue() {
@@ -85,7 +84,7 @@ public class WormUtils {
     }
 
     public static int getRandomGeneModifier() {
-        return (int) (-10 + Math.random() * 21);
+        return (int) (-30 + Math.random() * 30);
     }
 
     public static float getRandomPercent() {

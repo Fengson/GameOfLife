@@ -22,7 +22,7 @@ public class Bacteria extends Hex {
     }
 
     private int getRandomMass() {
-        return 1 + (int) (Math.random() * Constants.MAX_BACTERIA_WEIGHT);
+        return Constants.MIN_BACTERIA_WEIGHT + (int) (Math.random() * (Constants.MAX_BACTERIA_WEIGHT - Constants.MIN_BACTERIA_WEIGHT));
     }
 
 }

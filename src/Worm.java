@@ -47,6 +47,7 @@ public class Worm extends Hex {
 
     private int mass;
     private boolean activated;
+    public int stuckCount;
 
     /**
      * worm born out of ashes!
@@ -61,10 +62,11 @@ public class Worm extends Hex {
         this.gene = new int[Constants.GENE_COUNT];
         this.inheritedGene = new int[Constants.GENE_COUNT];
 
-        WormUtils.generateRandomGenes(gene,inheritedGene);
+        WormUtils.generateRandomGenes(gene, inheritedGene);
         this.probability = WormUtils.calculateProbability(gene);
         this.probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
         this.activated = true;
+        this.stuckCount = 0;
     }
 
     /**
@@ -81,17 +83,19 @@ public class Worm extends Hex {
         this.gene = new int[Constants.GENE_COUNT];
         this.inheritedGene = parent.getGenes();
 
-        WormUtils.mutateInAncestorsDirection(gene,inheritedGene,parent.getInheritedGenes());
+        WormUtils.mutateInAncestorsDirection(gene, inheritedGene, parent.getInheritedGenes());
         WormUtils.mutateOneGeneRandomly(gene);
         probability = WormUtils.calculateProbability(gene);
         probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
         this.activated = true;
+        this.stuckCount = 0;
     }
 
     /**
      * bzzz.... robo-worm
      * activate...
      * protocol...
+     *
      * @param command - activate worm
      */
     public void setActivated(boolean command) {
@@ -100,6 +104,10 @@ public class Worm extends Hex {
 
     public boolean isActivated() {
         return activated;
+    }
+
+    public void forceMutation() {
+        WormUtils.mutateOneGeneRandomly(gene);
     }
 
     /**

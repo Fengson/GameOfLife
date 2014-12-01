@@ -57,28 +57,35 @@ public class Game {
                     int newY = TranslateDirY(j, dir);
 
                     if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
-                        if (Level[newX][newY] == null || Level[newX][newY].is(Bacteria.class)){
-                        if (Level[newX][newY] != null && Level[newX][newY].is(Bacteria.class)) {
-                            Bacteria thisBact = (Bacteria) Level[newX][newY];
-                            thisWorm.eatBacteria(thisBact.getEaten());
+                        if (Level[newX][newY] == null || Level[newX][newY].is(Bacteria.class)) {
+                            if (Level[newX][newY] != null && Level[newX][newY].is(Bacteria.class)) {
+                                Bacteria thisBact = (Bacteria) Level[newX][newY];
+                                thisWorm.eatBacteria(thisBact.getEaten());
+                            }
+                            Level[newX][newY] = thisWorm;
+                            thisWorm.setX(newX);
+                            thisWorm.setY(newY);
+                            if (!thisWorm.looseWeight()) {
+                                Level[newX][newY] = null;
+                            }
+                            Level[i][j] = null;
                         }
-                        Level[newX][newY] = thisWorm;
-                        thisWorm.setX(newX);
-                        thisWorm.setY(newY);
-                        if (!thisWorm.looseWeight()) {
-                            Level[newX][newY] = null;
+                    } else if (!thisWorm.looseWeight()) {
+                        Level[i][j] = null;
+                    } else {
+                        thisWorm.stuckCount++;
+                        if (thisWorm.stuckCount >= Constants.MAX_STUCK) {
+                            thisWorm.forceMutation();
+                            thisWorm.stuckCount = 0;
                         }
-                        Level[i][j] = null;
-                    }} else if (!thisWorm.looseWeight()) {
-                        Level[i][j] = null;
                     }
 
                     if (thisWorm.isOverweight()) {
-                        for(int k=0;k<6;k++) {
+                        for (int k = 0; k < 6; k++) {
                             dir = WormUtils.getRandomDirection();
                             newX = TranslateDirX(i, dir);
                             newY = TranslateDirY(j, dir);
-                            if(newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null)
+                            if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null)
                                 break;
                         }
                         if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null) {
