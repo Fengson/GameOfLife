@@ -72,10 +72,10 @@ public class Game {
                         Level[newX][newY] = thisWorm;
                         thisWorm.setX(newX);
                         thisWorm.setY(newY);
-                        if (thisWorm.LooseWeight() == false)
+                        if (thisWorm.looseWeight() == false)
                             Level[newX][newY] = null;
                         Level[i][j] = null;
-                    } else if (thisWorm.LooseWeight() == false)
+                    } else if (thisWorm.looseWeight() == false)
                         Level[i][j] = null;
 
                     if (thisWorm.isOverweight()) {

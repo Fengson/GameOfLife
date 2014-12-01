@@ -92,7 +92,7 @@ public class Worm extends Hex {
         return direction = WormUtils.getDirectionByProbabilities(probabilitiesSum, probability);
     }
 
-    public boolean LooseWeight() {
+    public boolean looseWeight() {
         mass -= Constants.WEIGHT_LOSS_PER_ROUND;
         if (mass <= 0) {
             return false;
@@ -112,7 +112,7 @@ public class Worm extends Hex {
         return direction;
     }
 
-    public int getMass() {
+    private int getMass() {
         return mass;
     }
 
