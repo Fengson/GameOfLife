@@ -18,14 +18,6 @@ public class Game {
     public Game(int size) {
         this.levelSize = size;
         Level = new Hex[levelSize][levelSize];
-
-        /*
-        for (int i = 0; i < levelSize; i++) {
-            for (int j = 0; j < levelSize; j++) {
-                Level[i][j] = null;
-            }
-        }
-*/
         this.r = new Random();
         int x, y;
 
@@ -60,8 +52,9 @@ public class Game {
 
                 if (Level[i][j] != null && Level[i][j].is(Worm.class)) {
                     Worm thisWorm = (Worm) Level[i][j];
-                    if(thisWorm.isActive == false)
+                    if (!thisWorm.isActivated()) {
                         continue;
+                    }
                     HexDirection dir = thisWorm.getWormsNewDirection();
                     int newX = TranslateDirX(i, dir);
                     int newY = TranslateDirY(j, dir);
@@ -74,11 +67,13 @@ public class Game {
                         Level[newX][newY] = thisWorm;
                         thisWorm.setX(newX);
                         thisWorm.setY(newY);
-                        if (thisWorm.looseWeight() == false)
+                        if (!thisWorm.looseWeight()) {
                             Level[newX][newY] = null;
+                        }
                         Level[i][j] = null;
-                    } else if (thisWorm.looseWeight() == false)
+                    } else if (!thisWorm.looseWeight()) {
                         Level[i][j] = null;
+                    }
 
                     if (thisWorm.isOverweight()) {
                         dir = thisWorm.getWormsNewDirection();
@@ -86,17 +81,16 @@ public class Game {
                         newX = TranslateDirX(i, dir);
                         newY = TranslateDirY(j, dir);
 
-                        if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
-                            // if (Level[newX][newY] == null)
+                        if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null) {
                             Worm newborn = new Worm(newX, newY, thisWorm);
-                            newborn.activateProtocol(false);
+                            newborn.setActivated(false);
                             Level[newX][newY] = newborn;
                         }
                         Worm newborn = new Worm(i, j, thisWorm);
-                        newborn.activateProtocol(false);
+                        newborn.setActivated(false);
                         Level[i][j] = newborn;
                     }
-                    thisWorm.activateProtocol(false);
+                    thisWorm.setActivated(false);
                 }
             }
         }
@@ -114,7 +108,7 @@ public class Game {
             for (int j = 0; j < levelSize; j++) {
                 if (Level[i][j] != null && Level[i][j].is(Worm.class)) {
                     Worm thisWorm = (Worm) Level[i][j];
-                    thisWorm.activateProtocol(true);
+                    thisWorm.setActivated(true);
                 }
             }
         }

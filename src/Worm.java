@@ -46,7 +46,7 @@ public class Worm extends Hex {
     private double probabilitiesSum;
 
     private int mass;
-    public boolean isActive;
+    private boolean activated;
 
     /**
      * worm born out of ashes!
@@ -64,7 +64,7 @@ public class Worm extends Hex {
         WormUtils.generateRandomGenes(gene,inheritedGene);
         this.probability = WormUtils.calculateProbability(gene);
         this.probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
-        this.isActive = true;
+        this.activated = true;
     }
 
     /**
@@ -85,10 +85,22 @@ public class Worm extends Hex {
         WormUtils.mutateOneGeneRandomly(gene);
         probability = WormUtils.calculateProbability(gene);
         probabilitiesSum = WormUtils.calculateProbabilitiesSum(probability);
-        this.isActive = true;
+        this.activated = true;
     }
 
-    public void activateProtocol(boolean command) {isActive = command;}
+    /**
+     * bzzz.... robo-worm
+     * activate...
+     * protocol...
+     * @param command - activate worm
+     */
+    public void setActivated(boolean command) {
+        activated = command;
+    }
+
+    public boolean isActivated() {
+        return activated;
+    }
 
     /**
      * @return null when worm is dead, otherwise new direction
