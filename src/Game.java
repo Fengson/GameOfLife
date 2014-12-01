@@ -76,7 +76,7 @@ public class Game {
                     }
 
                     if (thisWorm.isOverweight()) {
-                        dir = thisWorm.getWormsNewDirection();
+                        dir = WormUtils.getRandomDirection();
 
                         newX = TranslateDirX(i, dir);
                         newY = TranslateDirY(j, dir);
