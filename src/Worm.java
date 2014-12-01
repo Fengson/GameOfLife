@@ -94,10 +94,7 @@ public class Worm extends Hex {
 
     public boolean looseWeight() {
         mass -= Constants.WEIGHT_LOSS_PER_ROUND;
-        if (mass <= 0) {
-            return false;
-        }
-        return true;
+        return mass > 0;
     }
 
     public void eatBacteria(int bacteriaMass) {
