@@ -12,6 +12,8 @@
 
 public class Hex {
 
+    protected int mass = -1;
+
     public Hex() {
     }
 
@@ -24,17 +26,8 @@ public class Hex {
         return c.isInstance(this);
     }
 
-    public int hexMass(Hex currentHex) {
 
-        if(currentHex.is(Worm.class)){
-            return ((Worm)currentHex).getMass();
-        }
-
-        if(currentHex.is(Bacteria.class)){
-            return ((Bacteria)currentHex).getEaten();
-        }
-
-        return -1;
-
+    public int getMass() {
+        return mass;
     }
 }

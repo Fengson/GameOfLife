@@ -15,15 +15,12 @@ public class OknoClass {
     private JFrame mainWindow;
     private Polygon[][] hexagonArray;
     private Polygon singleHexagon;
-    private final int xTable  = 40;
-    private final int yTable  = xTable;
+    private final int xTable  = Constants.LEVEL_SIZE;
+    private final int yTable  = Constants.LEVEL_SIZE;
     private final int windowSize = 800;
     private final int radius = windowSize/(2*xTable);
     private int gameArray[][];
     private int massArray[][];
-    static boolean isRunning = false;
-    static int nextStep = 0;
-    static int gameSpeed;
 
     public OknoClass() {
         initComponents();
@@ -76,17 +73,16 @@ public class OknoClass {
         sliderValue.setText((int)Math.pow(2, speedSlider.getValue()) + "ms");
 
         // Wartość początkowa
-        if(gameSpeed == 0){
-            gameSpeed = (int)Math.pow(2, speedSlider.getValue());
+        if(Constants.turnLengthInMs == 0){
+            Constants.turnLengthInMs = (int)Math.pow(2, speedSlider.getValue());
         }
 
         // Slider Listener
         speedSlider.addChangeListener(new ChangeListener() {
             @Override
             public void stateChanged(ChangeEvent e) {
-                int currentValue = (int)Math.pow(2,speedSlider.getValue());
-                gameSpeed = currentValue;
-                sliderValue.setText(currentValue + "ms");
+                Constants.turnLengthInMs = (int)Math.pow(2,speedSlider.getValue());
+                sliderValue.setText(Constants.turnLengthInMs + "ms");
             }
         });
 
@@ -175,21 +171,21 @@ public class OknoClass {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isRunning = true;
+                Constants.isRunning = true;
             }
         });
 
         stopButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isRunning = false;
+                Constants.isRunning = false;
             }
         });
 
         frameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                nextStep = 1;
+                Constants.nextStep = 1;
             }
         });
     }
@@ -223,62 +219,21 @@ public class OknoClass {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    int fieldKind;
+    int fieldMass;
 
-        int xTable;
-        int fieldKind;
-        int fieldMass;
+    public void redrawWindow(Game thisGame) {
+        for (int i = 0; i < xTable; i++) {
+            for (int j = 0; j < xTable; j++) {
+                fieldKind = thisGame.getFieldKind(i, j);
+                fieldMass = thisGame.getFieldMass(i, j);
 
-        OknoClass gameWindow = new OknoClass();
-        xTable = gameWindow.getX();
-
-        //Code under should be launched by button?
-        Game thisGame = new Game(xTable); // Calling constructor & adding some worms
-
-        while(true) {
-            while (isRunning) {
-                thisGame.MakeStep();      // Updating Level state
-
-                for (int i = 0; i < xTable; i++) {
-                    for (int j = 0; j < xTable; j++) {
-                        fieldKind = thisGame.getFieldKind(i, j);
-                        fieldMass = thisGame.getFieldMass(i, j);
-
-                        gameWindow.gameArray[i][j] = fieldKind;
-                        gameWindow.massArray[i][j] = fieldMass;
-                    }
-                }
-
-                gameWindow.gamePanel.repaint();
-
-                try {
-                    Thread.sleep(gameSpeed);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+                gameArray[i][j] = fieldKind;
+                massArray[i][j] = fieldMass;
             }
-
-            if(!isRunning && nextStep == 1) {
-                thisGame.MakeStep();
-
-                for (int i = 0; i < xTable; i++) {
-                    for (int j = 0; j < xTable; j++) {
-                        fieldKind = thisGame.getFieldKind(i, j);
-                        fieldMass = thisGame.getFieldMass(i, j);
-
-                        gameWindow.gameArray[i][j] = fieldKind;
-                        gameWindow.massArray[i][j] = fieldMass;
-                    }
-                }
-
-                gameWindow.gamePanel.repaint();
-                nextStep = 0;
-            }
-
-            Thread.sleep(1);
         }
 
+        gamePanel.repaint();
     }
 
 }

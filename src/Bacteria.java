@@ -7,7 +7,6 @@
  * Created by Naxster on 2014-11-23.
  */
 public class Bacteria extends Hex {
-    private final int mass;
 
     public Bacteria() {
         super();
