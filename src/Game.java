@@ -74,7 +74,7 @@ public class Game {
                         Level[i][j] = null;
                     } else {
                         thisWorm.stuckCount++;
-                        if (thisWorm.stuckCount >= Constants.MAX_STUCK && thisWorm.isUnderweight()) {
+                        if (thisWorm.stuckCount >= Constants.MAX_STUCK && thisWorm.getMass()<Constants.MIN_WORM_WEIGHT) {
                             thisWorm.forceMutation();
                             thisWorm.stuckCount = 0;
                         }

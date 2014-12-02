@@ -137,7 +137,7 @@ public class Worm extends Hex {
         return direction;
     }
 
-    private int getMass() {
+    public int getMass() {
         return mass;
     }
 
