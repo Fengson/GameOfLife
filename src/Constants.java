@@ -19,9 +19,9 @@ public class Constants {
     public static final int MIN_BACTERIA_WEIGHT = 20;
     public static final int MAX_STUCK = 5;
     public static final int GENE_COUNT = HexDirection.values().length;
-    public static final int initialWormsNumber = 100;
+    public static final int initialWormsNumber = 20;
     public static final int initialBacteryNumber = 400;
-    public static final int BacteryGrow = 200;
+    public static final int BacteryGrow = 700;
 
     public static final int TURN_LENGHT_MILISEC = 100;
 

@@ -90,10 +90,10 @@ public class Game {
                             Worm newborn = new Worm(newX, newY, thisWorm);
                             newborn.setActivated(false);
                             Level[newX][newY] = newborn;
+                            newborn = new Worm(i, j, thisWorm);
+                            newborn.setActivated(false);
+                            Level[i][j] = newborn;
                         }
-                        Worm newborn = new Worm(i, j, thisWorm);
-                        newborn.setActivated(false);
-                        Level[i][j] = newborn;
                     }
                     thisWorm.setActivated(false);
                 }
