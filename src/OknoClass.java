@@ -16,10 +16,11 @@ public class OknoClass {
     private Polygon[][] hexagonArray;
     private Polygon singleHexagon;
     private final int xTable  = 40;
-    private final int yTable  = 40;
+    private final int yTable  = xTable;
     private final int windowSize = 800;
     private final int radius = windowSize/(2*xTable);
     private int gameArray[][];
+    private int massArray[][];
     static boolean isRunning = false;
     static int nextStep = 0;
     static int gameSpeed;
@@ -27,6 +28,7 @@ public class OknoClass {
     public OknoClass() {
         initComponents();
         gameArray = new int[xTable][yTable];
+        massArray = new int[xTable][yTable];
     }
 
     public int getX(){ return xTable;}
@@ -51,6 +53,8 @@ public class OknoClass {
         JButton startButton = new JButton("Start");
         JButton stopButton = new JButton("Stop");
         JButton frameButton = new JButton("1 Frame");
+        final JCheckBox massCheckBox = new JCheckBox("Mass");
+        massCheckBox.setSelected(false);
 
         startButton.setPreferredSize(new Dimension(100, 40));
         stopButton.setPreferredSize(new Dimension(100, 40));
@@ -59,6 +63,7 @@ public class OknoClass {
         buttonsPanel.add(startButton);
         buttonsPanel.add(stopButton);
         buttonsPanel.add(frameButton);
+        buttonsPanel.add(massCheckBox);
 
         // Panel Slidera
         JPanel sliderPanel = new JPanel();
@@ -96,6 +101,10 @@ public class OknoClass {
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
 
+                int originalX = radius + radius / 2;
+                int x = radius + radius / 2;
+                int y = radius + radius / 2;
+
                 for(int i=0; i<xTable; i++) {
                     for (int j = 0; j < yTable; j++) {
 
@@ -122,7 +131,33 @@ public class OknoClass {
                             g2.setColor(Color.RED);
                             g2.fillPolygon(hexagonArray[i][j]);
                         }
+
+                        int rememberX = x;
+                        g2.setColor(Color.BLACK);
+
+                        if(massArray[i][j] < 10){
+                            x = x - 4;
+                        }else {
+                            x = x - 8;
+                        }
+
+                        if(massCheckBox.isSelected()) {
+                            if(massArray[i][j] == -1)
+                                g2.drawString("", x, y + 4);
+                            else
+                                g2.drawString(String.valueOf(massArray[i][j]), x, y + 4);
+                        }
+
+                        x = rememberX + 2 * radius;
                     }
+
+                    if(i % 2 == 0) {
+                        x = originalX + radius;
+                    } else {
+                        x = originalX;
+                    }
+
+                    y = y + 2 * radius - originalX/4;
                 }
 
             }
@@ -192,6 +227,7 @@ public class OknoClass {
 
         int xTable;
         int fieldKind;
+        int fieldMass;
 
         OknoClass gameWindow = new OknoClass();
         xTable = gameWindow.getX();
@@ -206,7 +242,10 @@ public class OknoClass {
                 for (int i = 0; i < xTable; i++) {
                     for (int j = 0; j < xTable; j++) {
                         fieldKind = thisGame.getFieldKind(i, j);
+                        fieldMass = thisGame.getFieldMass(i, j);
+
                         gameWindow.gameArray[i][j] = fieldKind;
+                        gameWindow.massArray[i][j] = fieldMass;
                     }
                 }
 
@@ -226,7 +265,10 @@ public class OknoClass {
                 for (int i = 0; i < xTable; i++) {
                     for (int j = 0; j < xTable; j++) {
                         fieldKind = thisGame.getFieldKind(i, j);
+                        fieldMass = thisGame.getFieldMass(i, j);
+
                         gameWindow.gameArray[i][j] = fieldKind;
+                        gameWindow.massArray[i][j] = fieldMass;
                     }
                 }
 

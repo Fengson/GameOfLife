@@ -190,6 +190,15 @@ public class Game {
 
         return 0;
     }
+
+    public  int getFieldMass(int x, int y){
+
+        if (this.Level[x][y] == null)
+            return -1;
+
+        // Worm or Bacteria
+        return  this.Level[x][y].hexMass(this.Level[x][y]);
+    }
 }
 
 

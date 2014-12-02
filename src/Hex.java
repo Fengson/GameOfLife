@@ -24,4 +24,17 @@ public class Hex {
         return c.isInstance(this);
     }
 
+    public int hexMass(Hex currentHex) {
+
+        if(currentHex.is(Worm.class)){
+            return ((Worm)currentHex).getMass();
+        }
+
+        if(currentHex.is(Bacteria.class)){
+            return ((Bacteria)currentHex).getEaten();
+        }
+
+        return -1;
+
+    }
 }
