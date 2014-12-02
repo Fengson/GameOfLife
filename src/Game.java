@@ -56,8 +56,7 @@ public class Game {
                     int newX = TranslateDirX(i, dir);
                     int newY = TranslateDirY(j, dir);
 
-                    if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize) {
-                        if (Level[newX][newY] == null || Level[newX][newY].is(Bacteria.class)) {
+                    if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && (Level[newX][newY] == null || Level[newX][newY].is(Bacteria.class))) {
                             if (Level[newX][newY] != null && Level[newX][newY].is(Bacteria.class)) {
                                 Bacteria thisBact = (Bacteria) Level[newX][newY];
                                 thisWorm.eatBacteria(thisBact.getEaten());
@@ -69,12 +68,11 @@ public class Game {
                                 Level[newX][newY] = null;
                             }
                             Level[i][j] = null;
-                        }
                     } else if (!thisWorm.looseWeight()) {
                         Level[i][j] = null;
                     } else {
                         thisWorm.stuckCount++;
-                        if (thisWorm.stuckCount >= Constants.MAX_STUCK && thisWorm.getMass()<Constants.MIN_WORM_WEIGHT) {
+                        if (thisWorm.stuckCount >= Constants.MAX_STUCK && thisWorm.isUnderweight()) {
                             thisWorm.forceMutation();
                             thisWorm.stuckCount = 0;
                         }
