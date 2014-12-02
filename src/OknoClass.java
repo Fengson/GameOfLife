@@ -1,14 +1,9 @@
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * Created by Fengson on 23.11.14.
  */
-
 public class OknoClass {
 
     private JPanel gamePanel;
@@ -20,9 +15,6 @@ public class OknoClass {
     private final int windowSize = 800;
     private final int radius = windowSize/(2*xTable);
     private int gameArray[][];
-    static boolean isRunning = false;
-    static int nextStep = 0;
-    static int gameSpeed;
 
     public OknoClass() {
         initComponents();
@@ -41,55 +33,6 @@ public class OknoClass {
 
         // Ostatnie dwie współrzędne to środek pierwszego Hexagona - (radius,radius) ustawia go w lewym górnym rogu
         createHexagons(xTable, yTable, radius, radius + radius / 2, radius + radius / 2);
-
-        // Panel Opcji - Główny Panel
-        JPanel optionsPanel = new JPanel(new BorderLayout());
-        optionsPanel.setPreferredSize(new Dimension(800, 50));
-
-        // Panel Przycisków
-        JPanel buttonsPanel = new JPanel();
-        JButton startButton = new JButton("Start");
-        JButton stopButton = new JButton("Stop");
-        JButton frameButton = new JButton("1 Frame");
-
-        startButton.setPreferredSize(new Dimension(100, 40));
-        stopButton.setPreferredSize(new Dimension(100, 40));
-        frameButton.setPreferredSize(new Dimension(100, 40));
-
-        buttonsPanel.add(startButton);
-        buttonsPanel.add(stopButton);
-        buttonsPanel.add(frameButton);
-
-        // Panel Slidera
-        JPanel sliderPanel = new JPanel();
-        final JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, 1, 11, 9);
-        speedSlider.setMajorTickSpacing(1);
-        speedSlider.setPaintLabels(true);
-        speedSlider.setPreferredSize(new Dimension(350, 50));
-
-        final JLabel sliderValue = new JLabel();
-        sliderValue.setText((int)Math.pow(2, speedSlider.getValue()) + "ms");
-
-        // Wartość początkowa
-        if(gameSpeed == 0){
-            gameSpeed = (int)Math.pow(2, speedSlider.getValue());
-        }
-
-        // Slider Listener
-        speedSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                int currentValue = (int)Math.pow(2,speedSlider.getValue());
-                gameSpeed = currentValue;
-                sliderValue.setText(currentValue + "ms");
-            }
-        });
-
-        sliderPanel.add(speedSlider);
-        sliderPanel.add(sliderValue);
-
-        optionsPanel.add(buttonsPanel, BorderLayout.WEST);
-        optionsPanel.add(sliderPanel, BorderLayout.CENTER);
 
         gamePanel = new JPanel() {
             @Override
@@ -128,35 +71,27 @@ public class OknoClass {
             }
 
             @Override
-            public Dimension getPreferredSize() { return new Dimension(windowSize + 2*radius, windowSize); }
+            public Dimension getPreferredSize() {
+                return new Dimension(windowSize + 2*radius, windowSize);
+            }
         };
 
-        mainWindow.add(optionsPanel, BorderLayout.NORTH);
-        mainWindow.add(gamePanel, BorderLayout.SOUTH);
+        JButton startButton = new JButton("Start");
+        startButton.setBounds(10, windowSize - 35, 100, 25);
+
+        JButton stopButton = new JButton("Stop");
+        stopButton.setBounds(110, windowSize - 35, 100, 25);
+
+        mainWindow.add(startButton);
+        mainWindow.add(stopButton);
+
+        startButton.setPreferredSize(new Dimension(300,300));
+        stopButton.setPreferredSize(new Dimension(300,300));
+
+
+        mainWindow.add(gamePanel);
         mainWindow.pack();
         mainWindow.setVisible(true);
-
-        // Action Listenery do Przycisków
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isRunning = true;
-            }
-        });
-
-        stopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isRunning = false;
-            }
-        });
-
-        frameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                nextStep = 1;
-            }
-        });
     }
 
     // Metoda do rysowania Hexagonów
@@ -188,7 +123,7 @@ public class OknoClass {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         int xTable;
         int fieldKind;
@@ -198,45 +133,27 @@ public class OknoClass {
 
         //Code under should be launched by button?
         Game thisGame = new Game(xTable); // Calling constructor & adding some worms
+        boolean isRunning = true;
+        while (isRunning){
+            thisGame.MakeStep();      // Updating Level state
 
-        while(true) {
-            while (isRunning) {
-                thisGame.MakeStep();      // Updating Level state
-
-                for (int i = 0; i < xTable; i++) {
-                    for (int j = 0; j < xTable; j++) {
-                        fieldKind = thisGame.getFieldKind(i, j);
-                        gameWindow.gameArray[i][j] = fieldKind;
-                    }
+            for(int i=0; i<xTable; i++){
+                for(int j=0; j<xTable; j++){
+                    fieldKind = thisGame.getFieldKind(i,j);
+                    gameWindow.gameArray[i][j] = fieldKind;
                 }
-
-                gameWindow.gamePanel.repaint();
-
-                try {
-                    Thread.sleep(gameSpeed);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
             }
 
-            if(!isRunning && nextStep == 1) {
-                thisGame.MakeStep();
+            gameWindow.gamePanel.repaint();
 
-                for (int i = 0; i < xTable; i++) {
-                    for (int j = 0; j < xTable; j++) {
-                        fieldKind = thisGame.getFieldKind(i, j);
-                        gameWindow.gameArray[i][j] = fieldKind;
-                    }
-                }
-
-                gameWindow.gamePanel.repaint();
-                nextStep = 0;
+            try {
+                Thread.sleep(Constants.TURN_LENGHT_MILISEC);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            Thread.sleep(1);
+            //isRunning = false;
         }
-
     }
 
 }
