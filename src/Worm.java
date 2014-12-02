@@ -129,6 +129,9 @@ public class Worm extends Hex {
     public boolean isOverweight() {
         return mass > Constants.MAX_WORM_WEIGHT;
     }
+    public boolean isUnderweight() {
+        return mass < Constants.MIN_WORM_WEIGHT;
+    }
 
     public HexDirection getDirection() {
         return direction;

@@ -147,7 +147,7 @@ public class OknoClass {
             gameWindow.gamePanel.repaint();
 
             try {
-                Thread.sleep(400);
+                Thread.sleep(Constants.TURN_LENGHT_MILISEC);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

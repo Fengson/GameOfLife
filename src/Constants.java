@@ -23,4 +23,6 @@ public class Constants {
     public static final int initialBacteryNumber = 100;
     public static final int BacteryGrow = 50;
 
+    public static final int TURN_LENGHT_MILISEC = 10;
+
 }
