@@ -52,11 +52,9 @@ public class Worm extends Hex {
     /**
      * worm born out of ashes!
      *
-     * @param x
-     * @param y
      */
-    public Worm(int x, int y) {
-        super(x, y);
+    public Worm() {
+        super();
         this.direction = WormUtils.getRandomDirection();
         this.mass = WormUtils.getRandomMass();
         this.gene = new int[Constants.GENE_COUNT];
@@ -72,12 +70,10 @@ public class Worm extends Hex {
     /**
      * hydra born worm
      *
-     * @param x
-     * @param y
      * @param parent
      */
-    public Worm(int x, int y, Worm parent) {
-        super(x, y);
+    public Worm(Worm parent) {
+        super();
         this.direction = parent.getDirection();
         this.mass = (int) (0.5 * parent.getMass());
         this.gene = new int[Constants.GENE_COUNT];

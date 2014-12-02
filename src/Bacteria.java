@@ -9,8 +9,8 @@
 public class Bacteria extends Hex {
     private final int mass;
 
-    public Bacteria(int x, int y) {
-        super(x, y);
+    public Bacteria() {
+        super();
         this.mass = getRandomMass();
     }
 

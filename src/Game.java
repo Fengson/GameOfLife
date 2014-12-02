@@ -25,7 +25,7 @@ public class Game {
             y = r.nextInt(levelSize);
             x = r.nextInt(levelSize);
             if (Level[x][y] == null) {
-                Level[x][y] = new Worm(x, y);
+                Level[x][y] = new Worm();
             }
 
         }
@@ -37,7 +37,7 @@ public class Game {
             x = r.nextInt(levelSize);
             y = r.nextInt(levelSize);
             if (Level[x][y] == null) {
-                Level[x][y] = new Bacteria(x, y);
+                Level[x][y] = new Bacteria();
             }
         }
     }
@@ -62,8 +62,6 @@ public class Game {
                                 thisWorm.eatBacteria(thisBact.getEaten());
                             }
                             Level[newX][newY] = thisWorm;
-                            thisWorm.setX(newX);
-                            thisWorm.setY(newY);
                             if (!thisWorm.looseWeight()) {
                                 Level[newX][newY] = null;
                             }
@@ -87,10 +85,10 @@ public class Game {
                                 break;
                         }
                         if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null) {
-                            Worm newborn = new Worm(newX, newY, thisWorm);
+                            Worm newborn = new Worm(thisWorm);
                             newborn.setActivated(false);
                             Level[newX][newY] = newborn;
-                            newborn = new Worm(i, j, thisWorm);
+                            newborn = new Worm(thisWorm);
                             newborn.setActivated(false);
                             Level[i][j] = newborn;
                         }
@@ -105,7 +103,7 @@ public class Game {
             int x = r.nextInt(levelSize);
             int y = r.nextInt(levelSize);
             if (Level[x][y] == null) {
-                Level[x][y] = new Bacteria(x, y);
+                Level[x][y] = new Bacteria();
             }
         }
 
