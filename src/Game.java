@@ -62,8 +62,8 @@ public class Game {
             return;
         }
         HexDirection dir = thisWorm.getWormsNewDirection();
-        int newX = TranslateDirX(i, dir);
-        int newY = TranslateDirY(j, dir);
+        int newX = TranslateDirection(i, j, dir, 'x');
+        int newY = TranslateDirection(i, j, dir, 'y');
 
         if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && (Level[newX][newY] == null || Level[newX][newY].is(Bacteria.class))) {
             moveWormAndEatBacteriaIfAble(thisWorm, newX, newY);
@@ -73,11 +73,10 @@ public class Game {
             //dead worm
             Level[i][j] = null;
         } else {
-            thisWorm.stuckCount++;
             evolveIfStuck(thisWorm);
         }
 
-        checkWormOverweight(i, j, thisWorm, newX, newY);
+        checkOverweightAndMultiplyIfNeeded(i, j, thisWorm, newX, newY);
         thisWorm.setChecked(true);
     }
 
@@ -93,19 +92,20 @@ public class Game {
     }
 
     private void evolveIfStuck(Worm thisWorm) {
+        thisWorm.stuckCount++;
         if (thisWorm.stuckCount >= Constants.MAX_STUCK && thisWorm.isUnderweight()) {
             thisWorm.forceMutation();
             thisWorm.stuckCount = 0;
         }
     }
 
-    private void checkWormOverweight(int i, int j, Worm thisWorm, int newX, int newY) {
+    private void checkOverweightAndMultiplyIfNeeded(int i, int j, Worm thisWorm, int newX, int newY) {
         HexDirection direction;
         if (thisWorm.isOverweight()) {
             for (int k = 0; k < 6; k++) {
                 direction = WormUtils.getRandomDirection();
-                newX = TranslateDirX(i, direction);
-                newY = TranslateDirY(j, direction);
+                newX = TranslateDirection(i, j, direction, 'x');
+                newY = TranslateDirection(i, j, direction, 'y');
                 if (newX >= 0 && newX < levelSize && newY >= 0 && newY < levelSize && Level[newX][newY] == null)
                     break;
             }
@@ -141,61 +141,56 @@ public class Game {
         }
     }
 
-    private int TranslateDirX(int x, HexDirection d) {
-        if (d == null) return x;
-        if (x % 2 == 1) {
+    private int TranslateDirection(int x, int y, HexDirection d, char c){
+        if(c == 'y'){
             switch (d) {
                 case LEFT:
-                    return x - 1;
+                    return y;
                 case RIGHT:
-                    return x + 1;
+                    return y;
                 case TOP_LEFT:
-                    return x;
+                    return y - 1;
                 case TOP_RIGHT:
-                    return x + 1;
+                    return y - 1;
                 case BOTTOM_LEFT:
-                    return x;
+                    return y + 1;
                 case BOTTOM_RIGHT:
-                    return x + 1;
+                    return y + 1;
             }
-        } else {
-            switch (d) {
-                case LEFT:
-                    return x - 1;
-                case RIGHT:
-                    return x + 1;
-                case TOP_LEFT:
-                    return x - 1;
-                case TOP_RIGHT:
-                    return x;
-                case BOTTOM_LEFT:
-                    return x - 1;
-                case BOTTOM_RIGHT:
-                    return x;
+        }else if(c == 'x'){
+            if(y%2 == 0){
+                switch (d) {
+                    case LEFT:
+                        return x - 1;
+                    case RIGHT:
+                        return x + 1;
+                    case TOP_LEFT:
+                        return x - 1;
+                    case TOP_RIGHT:
+                        return x;
+                    case BOTTOM_LEFT:
+                        return x - 1;
+                    case BOTTOM_RIGHT:
+                        return x;
+                }
+            }else{
+                switch (d) {
+                    case LEFT:
+                        return x - 1;
+                    case RIGHT:
+                        return x + 1;
+                    case TOP_LEFT:
+                        return x;
+                    case TOP_RIGHT:
+                        return x + 1;
+                    case BOTTOM_LEFT:
+                        return x;
+                    case BOTTOM_RIGHT:
+                        return x + 1;
+                }
             }
         }
-
-        return x;
-    }
-
-    private int TranslateDirY(int y, HexDirection d) {
-        if (d == null) return y;
-        switch (d) {
-            case LEFT:
-                return y;
-            case RIGHT:
-                return y;
-            case TOP_LEFT:
-                return y - 1;
-            case TOP_RIGHT:
-                return y - 1;
-            case BOTTOM_LEFT:
-                return y + 1;
-            case BOTTOM_RIGHT:
-                return y + 1;
-        }
-
-        return y;
+        return 0;
     }
 
     public int getFieldKind(int x, int y) {
