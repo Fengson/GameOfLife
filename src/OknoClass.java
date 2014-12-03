@@ -17,15 +17,17 @@ public class OknoClass {
     private Polygon singleHexagon;
     private final int xTable  = Constants.LEVEL_SIZE;
     private final int yTable  = Constants.LEVEL_SIZE;
-    private final int windowSize;
+    private final int fieldSizeX;
+    private final int fieldSizeY;
     private final int radius;
     private int gameArray[][];
     private int massArray[][];
 
     public OknoClass() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        windowSize = (int)screenSize.getHeight()-120;
-        radius = (int)screenSize.getHeight()/(2*xTable);
+        radius = (int)((screenSize.getHeight()-180)/(3*xTable/2+Math.sqrt(2/3)));
+        fieldSizeX = (int)(2*yTable*radius*Math.sqrt(3)/2)+2*radius;
+        fieldSizeY = 3*xTable*radius/2;
         initComponents();
         gameArray = new int[xTable][yTable];
         massArray = new int[xTable][yTable];
@@ -36,7 +38,7 @@ public class OknoClass {
     private void initComponents() {
 
         mainWindow = new JFrame("Game of Life");
-        mainWindow.setResizable(true);
+        mainWindow.setResizable(false);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         hexagonArray = new Polygon[xTable][yTable];
@@ -162,7 +164,7 @@ public class OknoClass {
             }
 
             @Override
-            public Dimension getPreferredSize() { return new Dimension(windowSize + 2*radius, windowSize); }
+            public Dimension getPreferredSize() { return new Dimension(fieldSizeX+120, fieldSizeY+80); }
         };
 
         mainWindow.add(optionsPanel, BorderLayout.NORTH);
