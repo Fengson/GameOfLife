@@ -17,12 +17,15 @@ public class OknoClass {
     private Polygon singleHexagon;
     private final int xTable  = Constants.LEVEL_SIZE;
     private final int yTable  = Constants.LEVEL_SIZE;
-    private final int windowSize = 800;
-    private final int radius = windowSize/(2*xTable);
+    private final int windowSize;
+    private final int radius;
     private int gameArray[][];
     private int massArray[][];
 
     public OknoClass() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        windowSize = (int)screenSize.getHeight()-120;
+        radius = (int)screenSize.getHeight()/(2*xTable);
         initComponents();
         gameArray = new int[xTable][yTable];
         massArray = new int[xTable][yTable];
@@ -33,7 +36,7 @@ public class OknoClass {
     private void initComponents() {
 
         mainWindow = new JFrame("Game of Life");
-        mainWindow.setResizable(false);
+        mainWindow.setResizable(true);
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         hexagonArray = new Polygon[xTable][yTable];
