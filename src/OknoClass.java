@@ -101,8 +101,8 @@ public class OknoClass {
                 int x = radius + radius / 2;
                 int y = radius + radius / 2;
 
-                for(int i=0; i<xTable; i++) {
-                    for (int j = 0; j < yTable; j++) {
+                for (int j = 0; j < yTable; j++) {
+                    for(int i=0; i<xTable; i++){
 
                         Graphics2D g2 = (Graphics2D) g;
                         g2.setStroke(new BasicStroke((float)4.75));
@@ -147,7 +147,7 @@ public class OknoClass {
                         x = rememberX + 2 * radius;
                     }
 
-                    if(i % 2 == 0) {
+                    if(j % 2 == 0) {
                         x = originalX + radius;
                     } else {
                         x = originalX;
@@ -196,8 +196,8 @@ public class OknoClass {
 
         int originalX = x;
 
-        for(int i=0; i<hexagonColumns; i++){
-            for(int j=0; j<hexagonRows; j++){
+        for(int j=0; j<hexagonRows; j++){
+            for(int i=0; i<hexagonColumns; i++){
 
                 singleHexagon = new Polygon();
                 for(int k=0; k<6; k++) {
@@ -209,7 +209,7 @@ public class OknoClass {
                 x = x + 2*r;
             }
 
-            if(i % 2 == 0) {
+            if(j % 2 == 0) {
                 x = originalX + r;
             } else {
                 x = originalX;
