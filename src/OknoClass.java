@@ -162,7 +162,7 @@ public class OknoClass {
             }
 
             @Override
-            public Dimension getPreferredSize() { return new Dimension(fieldSizeX+120, fieldSizeY+80); }
+            public Dimension getPreferredSize() { return new Dimension(fieldSizeX+20, fieldSizeY+50); }
         };
 
         mainWindow.add(optionsPanel, BorderLayout.NORTH);
