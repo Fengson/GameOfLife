@@ -25,15 +25,13 @@ public class OknoClass {
 
     public OknoClass() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        radius = (int)((screenSize.getHeight()-180)/(3*xTable/2+Math.sqrt(2/3)));
-        fieldSizeX = (int)(2*yTable*radius*Math.sqrt(3)/2)+2*radius;
-        fieldSizeY = 3*xTable*radius/2;
+        radius = (int)((screenSize.getHeight()*0.79)/(3*(yTable/2)));
+        fieldSizeX = (int)(2*radius*xTable);
+        fieldSizeY = (int)(50+(radius*3*(yTable/2)));
         initComponents();
         gameArray = new int[xTable][yTable];
         massArray = new int[xTable][yTable];
     }
-
-    public int getX(){ return xTable;}
 
     private void initComponents() {
 
