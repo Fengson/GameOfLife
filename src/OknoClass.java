@@ -25,7 +25,7 @@ public class OknoClass {
 
     public OknoClass() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        radius = (int)((screenSize.getHeight()*0.79)/(3*(yTable/2)));
+        radius = (int)((screenSize.getHeight()*0.78)/(3*(yTable/2)));
         fieldSizeX = (int)(2*radius*xTable);
         fieldSizeY = (int)(50+(radius*3*(yTable/2)));
         initComponents();
