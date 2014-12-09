@@ -207,13 +207,13 @@ public class OknoClass {
 
         int maxSize = Constants.MAX_WORM_WEIGHT - 1 + Constants.MAX_BACTERIA_WEIGHT;
 
-        if(massValue < maxSize * 0.1) return 100;
-        if(massValue < maxSize * 0.25) return 125;
-        if(massValue < maxSize * 0.50) return 150;
-        if(massValue < maxSize * 0.75) return 200;
-        if(massValue < maxSize * 0.90) return 225;
+        float percentValue = (float)massValue / (float)maxSize;
+        int returnValue = (int)(percentValue * 255.0);
 
-        return 255;
+        if(massValue > maxSize * 0.8) return 150;
+
+        return 255 - returnValue;
+
     }
 
     // Metoda do rysowania Hexagonów
