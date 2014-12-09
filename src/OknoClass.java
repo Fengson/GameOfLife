@@ -121,7 +121,11 @@ public class OknoClass {
 
                         // Worm Field
                         if(gameArray[i][j] == 1) {
-                            g2.setColor(Color.GREEN);
+
+                            int greenColor = getColorValue(massArray[i][j]);
+                            Color fillColor = new Color(0, greenColor, 0);
+
+                            g2.setColor(fillColor);
                             g2.fillPolygon(hexagonArray[i][j]);
                         }
 
@@ -135,9 +139,14 @@ public class OknoClass {
                         g2.setColor(Color.BLACK);
 
                         if(massArray[i][j] < 10){
+                            g2.setFont(new Font(g2.getFont().getFontName(), Font.PLAIN, 12));
                             x = x - 4;
-                        }else {
+                        }else if(massArray[i][j] < 100){
+                            g2.setFont(new Font(g2.getFont().getFontName(), Font.PLAIN, 12));
                             x = x - 8;
+                        } else {
+                            g2.setFont(new Font(g2.getFont().getFontName(), Font.PLAIN, 10));
+                            x = x - 10;
                         }
 
                         if(massCheckBox.isSelected()) {
@@ -191,6 +200,20 @@ public class OknoClass {
                 Constants.nextStep = 1;
             }
         });
+    }
+
+    // Metoda do generowania odcienia koloru
+    public int getColorValue(int massValue){
+
+        int maxSize = Constants.MAX_WORM_WEIGHT - 1 + Constants.MAX_BACTERIA_WEIGHT;
+
+        if(massValue < maxSize * 0.1) return 100;
+        if(massValue < maxSize * 0.25) return 125;
+        if(massValue < maxSize * 0.50) return 150;
+        if(massValue < maxSize * 0.75) return 200;
+        if(massValue < maxSize * 0.90) return 225;
+
+        return 255;
     }
 
     // Metoda do rysowania Hexagonów
